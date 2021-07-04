@@ -25,13 +25,13 @@ namespace ft
 				private:
 					pointer		_curObj;
 				public:
+					iterator() : _curObj(nullptr) {}
+					
 					iterator(pointer ptr) : _curObj(ptr) {}
 
 					~iterator() {}
 
 					iterator(iterator const &other) { *this = other; }
-
-					const_pointer	getObj() const { return _curObj; }
 
 					iterator&	operator = (iterator const &other)
 					{
@@ -39,6 +39,8 @@ namespace ft
 							_curObj = other._curObj;
 						return *this;
 					}
+
+					pointer			getObj() const { return _curObj; }
 
 					iterator&		operator ++ () { ++_curObj; return *this; }
 					iterator&		operator -- () { --_curObj; return *this; }
@@ -52,19 +54,19 @@ namespace ft
 					difference_type	operator - (iterator const &other) const { return _curObj - other._curObj; }
 					reference		operator [] (const_reference n) const { return _curObj[n]; }
 
-					bool			operator == (iterator const &other) const { return *_curObj == other._curObj; }
-					bool			operator != (iterator const &other) const { return *_curObj != other._curObj; }
-					bool			operator > (iterator const &other) const{ return *_curObj > other._curObj; }
-					bool			operator < (iterator const &other) const{ return *_curObj < other._curObj; }
-					bool			operator >= (iterator const &other) const { return *_curObj >= other._curObj; }
-					bool			operator <= (iterator const &other) const { return *_curObj <= other._curObj; }
+					bool			operator == (iterator const &other) const { return _curObj == other._curObj; }
+					bool			operator != (iterator const &other) const { return _curObj != other._curObj; }
+					bool			operator > (iterator const &other) const{ return _curObj > other._curObj; }
+					bool			operator < (iterator const &other) const{ return _curObj < other._curObj; }
+					bool			operator >= (iterator const &other) const { return _curObj >= other._curObj; }
+					bool			operator <= (iterator const &other) const { return _curObj <= other._curObj; }
 
-					bool			operator == (const_iterator const &other) const { return *_curObj == *other.getObj(); }
-					bool			operator != (const_iterator const &other) const { return *_curObj != *other.getObj(); }
-					bool			operator > (const_iterator const &other) const{ return *_curObj > *other.getObj(); }
-					bool			operator < (const_iterator const &other) const{ return *_curObj < *other.getObj(); }
-					bool			operator >= (const_iterator const &other) const { return *_curObj >= *other.getObj(); }
-					bool			operator <= (const_iterator const &other) const { return *_curObj <= *other.getObj(); }
+					bool			operator == (const_iterator const &other) const { return _curObj == other.getObj(); }
+					bool			operator != (const_iterator const &other) const { return _curObj != other.getObj(); }
+					bool			operator > (const_iterator const &other) const{ return _curObj > other.getObj(); }
+					bool			operator < (const_iterator const &other) const{ return _curObj < other.getObj(); }
+					bool			operator >= (const_iterator const &other) const { return _curObj >= other.getObj(); }
+					bool			operator <= (const_iterator const &other) const { return _curObj <= other.getObj(); }
 			};
 			
 			class const_iterator
@@ -72,6 +74,8 @@ namespace ft
 				private:
 					pointer		_curObj;
 				public:
+					const_iterator() : _curObj(nullptr) {}
+
 					const_iterator(pointer ptr) : _curObj(ptr) {}
 
 					~const_iterator() {}
@@ -85,7 +89,7 @@ namespace ft
 						return *this;
 					}
 
-					const_pointer	getObj() const { return _curObj; }
+					const_pointer		getObj() const { return _curObj; }
 
 					const_iterator&		operator ++ () { ++_curObj; return *this; }
 					const_iterator&		operator -- () { --_curObj; return *this; }
@@ -99,19 +103,19 @@ namespace ft
 					difference_type		operator - (const_iterator const &other) const { return _curObj - other._curObj; }
 					const_reference		operator [] (const_reference n) const { return _curObj[n]; }
 
-					bool				operator == (const_iterator const &other) const { return *_curObj == other._curObj; }
-					bool				operator != (const_iterator const &other) const { return *_curObj != other._curObj; }
-					bool				operator > (const_iterator const &other) const{ return *_curObj > other._curObj; }
-					bool				operator < (const_iterator const &other) const{ return *_curObj < other._curObj; }
-					bool				operator >= (const_iterator const &other) const { return *_curObj >= other._curObj; }
-					bool				operator <= (const_iterator const &other) const { return *_curObj <= other._curObj; }
+					bool				operator == (const_iterator const &other) const { return _curObj == other._curObj; }
+					bool				operator != (const_iterator const &other) const { return _curObj != other._curObj; }
+					bool				operator > (const_iterator const &other) const{ return _curObj > other._curObj; }
+					bool				operator < (const_iterator const &other) const{ return _curObj < other._curObj; }
+					bool				operator >= (const_iterator const &other) const { return _curObj >= other._curObj; }
+					bool				operator <= (const_iterator const &other) const { return _curObj <= other._curObj; }
 
-					bool				operator == (iterator const &other) const { return *_curObj == *other.getObj(); }
-					bool				operator != (iterator const &other) const { return *_curObj != *other.getObj(); }
-					bool				operator > (iterator const &other) const{ return *_curObj > *other.getObj(); }
-					bool				operator < (iterator const &other) const{ return *_curObj < *other.getObj(); }
-					bool				operator >= (iterator const &other) const { return *_curObj >= *other.getObj(); }
-					bool				operator <= (iterator const &other) const { return *_curObj <= *other.getObj(); }
+					bool				operator == (iterator const &other) const { return _curObj == other.getObj(); }
+					bool				operator != (iterator const &other) const { return _curObj != other.getObj(); }
+					bool				operator > (iterator const &other) const{ return _curObj > other.getObj(); }
+					bool				operator < (iterator const &other) const{ return _curObj < other.getObj(); }
+					bool				operator >= (iterator const &other) const { return _curObj >= other.getObj(); }
+					bool				operator <= (iterator const &other) const { return _curObj <= other.getObj(); }
 			};
 			
 			class reverse_iterator
@@ -119,6 +123,8 @@ namespace ft
 				private:
 					pointer		_curObj;
 				public:
+					reverse_iterator() : _curObj(nullptr) {}
+
 					reverse_iterator(pointer ptr) : _curObj(ptr) {}
 
 					~reverse_iterator() {}
@@ -132,7 +138,7 @@ namespace ft
 						return *this;
 					}
 
-					const_pointer	getObj() const { return _curObj; }
+					pointer				getObj() const { return _curObj; }
 
 					reverse_iterator&	operator ++ () { --_curObj; return *this; }
 					reverse_iterator&	operator -- () { ++_curObj; return *this; }
@@ -146,19 +152,19 @@ namespace ft
 					difference_type		operator - (reverse_iterator const &other) const { return other._curObj - _curObj; }
 					reference			operator [] (const_reference n) const { return _curObj[n]; }
 
-					bool				operator == (reverse_iterator const &other) const { return *_curObj == other._curObj; }
-					bool				operator != (reverse_iterator const &other) const { return *_curObj != other._curObj; }
-					bool				operator > (reverse_iterator const &other) const{ return *_curObj > other._curObj; }
-					bool				operator < (reverse_iterator const &other) const{ return *_curObj < other._curObj; }
-					bool				operator >= (reverse_iterator const &other) const { return *_curObj >= other._curObj; }
-					bool				operator <= (reverse_iterator const &other) const { return *_curObj <= other._curObj; }
+					bool				operator == (reverse_iterator const &other) const { return _curObj == other._curObj; }
+					bool				operator != (reverse_iterator const &other) const { return _curObj != other._curObj; }
+					bool				operator > (reverse_iterator const &other) const{ return _curObj > other._curObj; }
+					bool				operator < (reverse_iterator const &other) const{ return _curObj < other._curObj; }
+					bool				operator >= (reverse_iterator const &other) const { return _curObj >= other._curObj; }
+					bool				operator <= (reverse_iterator const &other) const { return _curObj <= other._curObj; }
 
-					bool				operator == (const_reverse_iterator const &other) const { return *_curObj == *other.getObj(); }
-					bool				operator != (const_reverse_iterator const &other) const { return *_curObj != *other.getObj(); }
-					bool				operator > (const_reverse_iterator const &other) const{ return *_curObj > *other.getObj(); }
-					bool				operator < (const_reverse_iterator const &other) const{ return *_curObj < *other.getObj(); }
-					bool				operator >= (const_reverse_iterator const &other) const { return *_curObj >= *other.getObj(); }
-					bool				operator <= (const_reverse_iterator const &other) const { return *_curObj <= *other.getObj(); }
+					bool				operator == (const_reverse_iterator const &other) const { return _curObj == other.getObj(); }
+					bool				operator != (const_reverse_iterator const &other) const { return _curObj != other.getObj(); }
+					bool				operator > (const_reverse_iterator const &other) const{ return _curObj > other.getObj(); }
+					bool				operator < (const_reverse_iterator const &other) const{ return _curObj < other.getObj(); }
+					bool				operator >= (const_reverse_iterator const &other) const { return _curObj >= other.getObj(); }
+					bool				operator <= (const_reverse_iterator const &other) const { return _curObj <= other.getObj(); }
 			};
 			
 			class const_reverse_iterator
@@ -166,6 +172,8 @@ namespace ft
 				private:
 					pointer		_curObj;
 				public:
+					const_reverse_iterator() : _curObj(nullptr) {}
+
 					const_reverse_iterator(pointer ptr) : _curObj(ptr) {}
 
 					~const_reverse_iterator() {}
@@ -179,7 +187,7 @@ namespace ft
 						return *this;
 					}
 
-					const_pointer	getObj() const { return _curObj; }
+					const_pointer				getObj() const { return _curObj; }
 
 					const_reverse_iterator&		operator ++ () { --_curObj; return *this; }
 					const_reverse_iterator&		operator -- () { ++_curObj; return *this; }
@@ -193,19 +201,19 @@ namespace ft
 					difference_type				operator - (const_reverse_iterator const &other) const { return other._curObj - _curObj; }
 					const_reference				operator [] (const_reference n) const { return _curObj[n]; }
 
-					bool						operator == (const_reverse_iterator const &other) const { return *_curObj == other._curObj; }
-					bool						operator != (const_reverse_iterator const &other) const { return *_curObj != other._curObj; }
-					bool						operator > (const_reverse_iterator const &other) const{ return *_curObj > other._curObj; }
-					bool						operator < (const_reverse_iterator const &other) const{ return *_curObj < other._curObj; }
-					bool						operator >= (const_reverse_iterator const &other) const { return *_curObj >= other._curObj; }
-					bool						operator <= (const_reverse_iterator const &other) const { return *_curObj <= other._curObj; }
+					bool						operator == (const_reverse_iterator const &other) const { return _curObj == other._curObj; }
+					bool						operator != (const_reverse_iterator const &other) const { return _curObj != other._curObj; }
+					bool						operator > (const_reverse_iterator const &other) const{ return _curObj > other._curObj; }
+					bool						operator < (const_reverse_iterator const &other) const{ return _curObj < other._curObj; }
+					bool						operator >= (const_reverse_iterator const &other) const { return _curObj >= other._curObj; }
+					bool						operator <= (const_reverse_iterator const &other) const { return _curObj <= other._curObj; }
 
-					bool						operator == (reverse_iterator const &other) const { return *_curObj == *other.getObj(); }
-					bool						operator != (reverse_iterator const &other) const { return *_curObj != *other.getObj(); }
-					bool						operator > (reverse_iterator const &other) const{ return *_curObj > *other.getObj(); }
-					bool						operator < (reverse_iterator const &other) const{ return *_curObj < *other.getObj(); }
-					bool						operator >= (reverse_iterator const &other) const { return *_curObj >= *other.getObj(); }
-					bool						operator <= (reverse_iterator const &other) const { return *_curObj <= *other.getObj(); }
+					bool						operator == (reverse_iterator const &other) const { return _curObj == other.getObj(); }
+					bool						operator != (reverse_iterator const &other) const { return _curObj != other.getObj(); }
+					bool						operator > (reverse_iterator const &other) const{ return _curObj > other.getObj(); }
+					bool						operator < (reverse_iterator const &other) const{ return _curObj < other.getObj(); }
+					bool						operator >= (reverse_iterator const &other) const { return _curObj >= other.getObj(); }
+					bool						operator <= (reverse_iterator const &other) const { return _curObj <= other.getObj(); }
 			};
 
 		private:
@@ -278,6 +286,76 @@ namespace ft
 			bool					empty() const { return _arrSize ? false : true; }
 			size_t					max_size() const { return _alloc.max_size(); }
 
+			iterator		insert(iterator pos, const_reference value)
+			{
+				if (_arrSize == _arrCap)
+				{
+					size_t	id = (pos.getObj() - begin().getObj());
+					reserve(_arrSize * 2);
+					pos = begin() + id;
+				}
+				std::memmove(pos.getObj() + 1, pos.getObj(), sizeof(value) * (end().getObj() - pos.getObj()));
+				_alloc.construct(pos.getObj(), value);
+				++_arrSize;
+				return pos;
+			}
+
+			void			insert(iterator pos, size_t count, const_reference value)
+			{
+				if (_arrSize + count > _arrCap)
+				{
+					size_t	id = (pos.getObj() - begin().getObj());
+					if (_arrSize + count > _arrCap * 2)
+						reserve(_arrSize + count);
+					else
+						reserve(_arrCap * 2);
+					pos = begin() + id;
+				}
+				std::memmove(pos.getObj() + count, pos.getObj(), sizeof(value) * (end().getObj() - pos.getObj()));
+				for (size_t i = 0; i != count; ++i)
+				{
+					_alloc.construct((pos + i).getObj(), value);
+				}
+				_arrSize += count;
+			}
+
+			template <class InputIt> void	insert(iterator pos, InputIt first, InputIt last)
+			{
+				size_t	range = last - first;
+				if (_arrSize + range > _arrCap)
+				{
+					size_t	id = (pos.getObj() - begin().getObj());
+					if (_arrSize + range > _arrCap * 2)
+						reserve(_arrSize + range);
+					else
+						reserve(_arrCap * 2);
+					pos = begin() + id;
+				}
+				std::memmove(pos.getObj() + range, pos.getObj(), sizeof(value_type) * (end().getObj() - pos.getObj()));
+				for (size_t i = 0; i != range; ++i)
+				{
+					_alloc.construct((pos + i).getObj(), *(first + i));
+				}
+				_arrSize += range;
+			}
+
+			iterator		erase(iterator pos)
+			{
+				_alloc.destroy(pos.getObj());
+				std::memmove(pos.getObj(), pos.getObj() + 1, sizeof(value_type) * (end().getObj() - pos.getObj()));
+				--_arrSize;
+				return pos;
+			}
+
+			iterator		erase(iterator first, iterator last)
+			{
+				for (iterator tmp = first; tmp != last; ++tmp)
+					_alloc.destroy(tmp.getObj());
+				std::memmove(first.getObj(), last.getObj(), sizeof(value_type) * (end().getObj() - last.getObj()));
+				_arrSize -= last.getObj() - first.getObj();
+				return last;
+			}
+
 			void			clear()
 			{
 				for (size_t i = 0; i < _arrSize; ++i)
@@ -285,15 +363,15 @@ namespace ft
 				_arrSize = 0;
 			}
 
-			void					reserve(size_t n)
+			void			reserve(size_t n)
 			{
 				if (n > _arrCap)
 				{
 					pointer	newArr = _alloc.allocate(n);
 					for (size_t i = 0; i < _arrSize; ++i)
 					{
-						_alloc.construct(newArr + i, _arr[i]);		// ptotecting...
-						_alloc.destroy(_arr + i);					// ...from exception !
+						_alloc.construct(newArr + i, _arr[i]);
+						_alloc.destroy(_arr + i);					// protecting from exception ???
 					}
 					if (_arr)
 						_alloc.deallocate(_arr, _arrCap);
@@ -308,6 +386,7 @@ namespace ft
 					reserve(_arrCap * 2);
 				_arrSize = n;
 			}
+
 			void			resize(size_t n, const_reference value)
 			{
 				if (n > _arrCap)
@@ -337,14 +416,16 @@ namespace ft
 			reference		at(size_t n)
 			{
 				if (n >= _arrSize)
-					throw std::out_of_range("Out of range");			//	exception ?
+					throw std::out_of_range("Out of range");			//	exception ????
 				return _arr[n];
 			}
 
 			void			assign(size_t n, const_reference value)
 			{
+				// clear();
+				// insert(begin(), n, value);
 				if (n < 0)
-					throw std::out_of_range("Out of range");			//	exception ?
+					throw std::out_of_range("Out of range");			//	exception ????
 				if (n > _arrCap)
 					reserve(n);
 				for (size_t i = 0; i < n; i++)
@@ -376,7 +457,7 @@ namespace ft
 			reference		operator [] (size_t n)
 			{
 				// if (n >= _arrCap)
-				// 	throw std::out_of_range("Out of range");			//	exception ?
+				// 	throw std::out_of_range("Out of range");			//	exception ????
 				return _arr[n];
 			}
 	};
