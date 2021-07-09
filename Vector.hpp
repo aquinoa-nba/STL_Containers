@@ -20,6 +20,8 @@ class ft::Vector
 		class reverse_iterator;
 		class const_reverse_iterator;
 
+/*	ITERATOR	*/
+
 		class iterator : public ft::iterator_traits<std::random_access_iterator_tag, value_type>
 		{
 			private:
@@ -28,11 +30,11 @@ class ft::Vector
 				iterator() : _ptr(nullptr) {}
 				iterator(pointer ptr) : _ptr(ptr) {}
 				~iterator() {}
-				iterator(iterator const &other) { *this = other; }
+				iterator(const iterator &other) { *this = other; }
 
 				pointer			getPtr() const { return _ptr; }
 
-				iterator&		operator = (iterator const &other)
+				iterator&		operator = (const iterator &other)
 				{
 					if (this != &other)
 						_ptr = other._ptr;
@@ -67,7 +69,9 @@ class ft::Vector
 				bool			operator <= (const_iterator const &other) const { return _ptr <= other.getPtr(); }
 		};
 
-		class const_iterator : public ft::iterator_traits<std::random_access_iterator_tag, value_type const>
+/*	CONST_ITERATOR	*/
+
+		class const_iterator : public ft::iterator_traits<std::random_access_iterator_tag, const value_type>
 		{
 			private:
 				pointer		_ptr;
@@ -75,11 +79,11 @@ class ft::Vector
 				const_iterator() : _ptr(nullptr) {}
 				const_iterator(pointer ptr) : _ptr(ptr) {}
 				~const_iterator() {}
-				const_iterator(const_iterator const &other) { *this = other; }
+				const_iterator(const const_iterator &other) { *this = other; }
 
 				const_pointer		getPtr() const { return _ptr; }
 
-				const_iterator&		operator = (const_iterator const &other)
+				const_iterator&		operator = (const const_iterator &other)
 				{
 					if (this != &other)
 						_ptr = other._ptr;
@@ -114,6 +118,8 @@ class ft::Vector
 				bool				operator <= (iterator const &other) const { return _ptr <= other.getPtr(); }
 		};
 
+/*	REVERSE_ITERATOR	*/
+
 		class reverse_iterator : public ft::iterator_traits<std::random_access_iterator_tag, value_type>
 		{
 			private:
@@ -122,11 +128,11 @@ class ft::Vector
 				reverse_iterator() : _ptr(nullptr) {}
 				reverse_iterator(pointer ptr) : _ptr(ptr) {}
 				~reverse_iterator() {}
-				reverse_iterator(reverse_iterator const &other) { *this = other; }
+				reverse_iterator(const reverse_iterator &other) { *this = other; }
 
 				pointer				getPtr() const { return _ptr; }
 
-				reverse_iterator&	operator = (reverse_iterator const &other)
+				reverse_iterator&	operator = (const reverse_iterator &other)
 				{
 					if (this != &other)
 						_ptr = other._ptr;
@@ -161,7 +167,9 @@ class ft::Vector
 				bool				operator <= (const_reverse_iterator const &other) const { return _ptr <= other.getPtr(); }
 		};
 
-		class const_reverse_iterator : public ft::iterator_traits<std::random_access_iterator_tag, value_type const>
+/*	CONST_REVERSE_ITERATOR	*/
+
+		class const_reverse_iterator : public ft::iterator_traits<std::random_access_iterator_tag, const value_type>
 		{
 			private:
 				pointer		_ptr;
@@ -169,11 +177,11 @@ class ft::Vector
 				const_reverse_iterator() : _ptr(nullptr) {}
 				const_reverse_iterator(pointer ptr) : _ptr(ptr) {}
 				~const_reverse_iterator() {}
-				const_reverse_iterator(const_reverse_iterator const &other) { *this = other; }
+				const_reverse_iterator(const const_reverse_iterator &other) { *this = other; }
 
 				const_pointer				getPtr() const { return _ptr; }
 
-				const_reverse_iterator&		operator = (const_reverse_iterator const &other)
+				const_reverse_iterator&		operator = (const const_reverse_iterator &other)
 				{
 					if (this != &other)
 						_ptr = other._ptr;
@@ -215,13 +223,11 @@ class ft::Vector
 		size_t			_arrCap;
 
 	public:
-		// explicit	Vector(const _Allocator& alloc = _Allocator())
-		// 	: _alloc(alloc), _arr(nullptr), _arrSize(0), _arrCap(0) {}
+
+/*	CONSTRUCTORS	*/
+
 		Vector() : _arr(nullptr), _arrSize(0), _arrCap(0) {}
 
-		// explicit	Vector(	size_t count,
-		// 					const_reference value = value_type(),
-		// 					const _Allocator& alloc = _Allocator())
 		Vector(size_t n, const_reference value)
 			: _arr(_alloc.allocate(n)), _arrSize(n), _arrCap(n)
 		{
@@ -229,7 +235,7 @@ class ft::Vector
 				_alloc.construct(_arr + i, value);
 		}
 
-		Vector( size_t count )
+		Vector(size_t count)
 		{
 			if (count < 0)
 				throw std::out_of_range("vector");
@@ -238,8 +244,8 @@ class ft::Vector
 			assign(count, value_type());
 		}
 
-		template<class InputIt>
-		Vector(InputIt first, InputIt last, typename ft::enable_if<std::__is_input_iterator<InputIt>::value>::type * = nullptr )
+		template<class _InputIt>
+		Vector(_InputIt first, _InputIt last, typename ft::enable_if<std::__is_input_iterator<_InputIt>::value>::type * = nullptr)
 		{
 			size_t	range = last - first;
 			if (last - first < 0)
@@ -250,7 +256,7 @@ class ft::Vector
 			insert(begin(), first, last);
 		}
 
-		Vector(Vector const &other)
+		Vector(const Vector &other)
 			: _alloc(other._alloc), _arrSize(other._arrSize), _arrCap(other._arrCap)
 		{
 			_arr = _alloc.allocate(_arrCap);
@@ -258,7 +264,20 @@ class ft::Vector
 				_alloc.construct(_arr + i, other._arr[i]);
 		}
 
-		Vector&	operator = (Vector const &other)
+/*	DESTRUCTOR	*/
+
+		~Vector()
+		{
+			if (_arr)
+			{
+				clear();
+				_alloc.deallocate(_arr, _arrCap);
+			}
+		}
+
+/*	COPY ASSIGNMENT OPERATOR	*/
+
+		Vector&	operator = (const Vector &other)
 		{
 			if (this != &other)
 			{
@@ -277,14 +296,7 @@ class ft::Vector
 			return *this;
 		}
 
-		~Vector()
-		{
-			if (_arr)
-			{
-				clear();
-				_alloc.deallocate(_arr, _arrCap);
-			}
-		}
+/*	MEMBER FUNCTIONS	*/
 
 		iterator				begin() { return iterator(_arr); }
 		iterator				end() { return iterator(_arr + _arrSize); }
@@ -308,78 +320,6 @@ class ft::Vector
 		bool					empty() const { return _arrSize ? false : true; }
 		size_t					max_size() const { return _alloc.max_size(); }
 
-		iterator		insert(iterator pos, const_reference value)
-		{
-			if (_arrSize == _arrCap)
-			{
-				size_t	id = (pos.getPtr() - begin().getPtr());
-				reserve(_arrSize * 2);
-				pos = begin() + id;
-			}
-			std::memmove(pos.getPtr() + 1, pos.getPtr(), sizeof(value) * (end().getPtr() - pos.getPtr()));
-			_alloc.construct(pos.getPtr(), value);
-			++_arrSize;
-			return pos;
-		}
-
-		void			insert(iterator pos, size_t count, const_reference value)
-		{
-			if (_arrSize + count > _arrCap)
-			{
-				size_t	id = (pos.getPtr() - begin().getPtr());
-				if (_arrSize + count > _arrCap * 2)
-					reserve(_arrSize + count);
-				else
-					reserve(_arrCap * 2);
-				pos = begin() + id;
-			}
-			std::memmove(pos.getPtr() + count, pos.getPtr(), sizeof(value) * (end().getPtr() - pos.getPtr()));
-			for (size_t i = 0; i != count; ++i)
-			{
-				_alloc.construct((pos + i).getPtr(), value);
-			}
-			_arrSize += count;
-		}
-
-		template <class InputIt>
-		void	insert(iterator pos, InputIt first, InputIt last,
-				typename ft::enable_if<std::__is_input_iterator<InputIt>::value>::type* = 0)
-		{
-			size_t	range = last - first;
-			if (_arrSize + range > _arrCap)
-			{
-				size_t	id = (pos.getPtr() - begin().getPtr());
-				if (_arrSize + range > _arrCap * 2)
-					reserve(_arrSize + range);
-				else
-					reserve(_arrCap * 2);
-				pos = begin() + id;
-			}
-			std::memmove(pos.getPtr() + range, pos.getPtr(), sizeof(value_type) * (end().getPtr() - pos.getPtr()));
-			for (size_t i = 0; i != range; ++i)
-			{
-				_alloc.construct((pos + i).getPtr(), *(first + i));
-			}
-			_arrSize += range;
-		}
-
-		iterator		erase(iterator pos)
-		{
-			_alloc.destroy(pos.getPtr());
-			std::memmove(pos.getPtr(), pos.getPtr() + 1, sizeof(value_type) * (end().getPtr() - pos.getPtr()));
-			--_arrSize;
-			return pos;
-		}
-
-		iterator		erase(iterator first, iterator last)
-		{
-			for (iterator tmp = first; tmp != last; ++tmp)
-				_alloc.destroy(tmp.getPtr());
-			std::memmove(first.getPtr(), last.getPtr(), sizeof(value_type) * (end().getPtr() - last.getPtr()));
-			_arrSize -= last.getPtr() - first.getPtr();
-			return last;
-		}
-
 		void			clear()
 		{
 			for (size_t i = 0; i < _arrSize; ++i)
@@ -395,7 +335,7 @@ class ft::Vector
 				for (size_t i = 0; i < _arrSize; ++i)
 				{
 					_alloc.construct(newArr + i, _arr[i]);
-					_alloc.destroy(_arr + i);					// protecting from exception ???
+					_alloc.destroy(_arr + i);
 				}
 				if (_arr)
 					_alloc.deallocate(_arr, _arrCap);
@@ -451,12 +391,84 @@ class ft::Vector
 			return _arr[n];
 		}
 
+		iterator		erase(iterator pos)
+		{
+			_alloc.destroy(pos.getPtr());
+			std::memmove(pos.getPtr(), pos.getPtr() + 1, sizeof(value_type) * (end().getPtr() - pos.getPtr()));
+			--_arrSize;
+			return pos;
+		}
+
+		iterator		erase(iterator first, iterator last)
+		{
+			for (iterator tmp = first; tmp != last; ++tmp)
+				_alloc.destroy(tmp.getPtr());
+			std::memmove(first.getPtr(), last.getPtr(), sizeof(value_type) * (end().getPtr() - last.getPtr()));
+			_arrSize -= last.getPtr() - first.getPtr();
+			return last;
+		}
+
+		iterator		insert(iterator pos, const_reference value)
+		{
+			if (_arrSize == _arrCap)
+			{
+				size_t	id = (pos.getPtr() - begin().getPtr());
+				reserve(_arrSize * 2);
+				pos = begin() + id;
+			}
+			std::memmove(pos.getPtr() + 1, pos.getPtr(), sizeof(value) * (end().getPtr() - pos.getPtr()));
+			_alloc.construct(pos.getPtr(), value);
+			++_arrSize;
+			return pos;
+		}
+
+		void			insert(iterator pos, size_t count, const_reference value)
+		{
+			if (_arrSize + count > _arrCap)
+			{
+				size_t	id = (pos.getPtr() - begin().getPtr());
+				if (_arrSize + count > _arrCap * 2)
+					reserve(_arrSize + count);
+				else
+					reserve(_arrCap * 2);
+				pos = begin() + id;
+			}
+			std::memmove(pos.getPtr() + count, pos.getPtr(), sizeof(value) * (end().getPtr() - pos.getPtr()));
+			for (size_t i = 0; i != count; ++i)
+				_alloc.construct((pos + i).getPtr(), value);
+			_arrSize += count;
+		}
+
+		template<class _InputIt>
+		void	insert(iterator pos, _InputIt first, _InputIt last,
+				typename ft::enable_if<std::__is_input_iterator<_InputIt>::value>::type * = nullptr)
+		{
+			size_t	range = last - first;
+			if (_arrSize + range > _arrCap)
+			{
+				size_t	id = (pos.getPtr() - begin().getPtr());
+				if (_arrSize + range > _arrCap * 2)
+					reserve(_arrSize + range);
+				else
+					reserve(_arrCap * 2);
+				pos = begin() + id;
+			}
+			std::memmove(pos.getPtr() + range, pos.getPtr(), sizeof(value_type) * (end().getPtr() - pos.getPtr()));
+			for (size_t i = 0; i != range; ++i)
+				_alloc.construct((pos + i).getPtr(), *(first + i));
+			_arrSize += range;
+		}
+
 		void			assign(size_t n, const_reference value)
 		{
-			// clear();
-			// insert(begin(), n, value);
-			if (n < 0)
-				throw std::out_of_range("vector");			//	exception ????
+			clear();
+			if ((int)n < 0)
+			{
+				_alloc.deallocate(_arr, _arrCap);
+				_arr = nullptr;
+				_arrCap = 0;
+				throw std::out_of_range("vector");
+			}
 			if (n > _arrCap)
 				reserve(n);
 			for (size_t i = 0; i < n; i++)
@@ -464,9 +476,9 @@ class ft::Vector
 			_arrSize = n;
 		}
 
-		template <class InputIt>
-		void			assign(InputIt first, InputIt last,
-						typename ft::enable_if<std::__is_input_iterator<InputIt>::value>::type* = 0)
+		template<class _InputIt>
+		void	assign(_InputIt first, _InputIt last,
+		typename ft::enable_if<std::__is_input_iterator<_InputIt>::value>::type * = nullptr)
 		{
 			clear();
 			if (last - first < 0)
@@ -503,60 +515,54 @@ class ft::Vector
 			}
 		}
 
-		reference		operator [] (size_t n)
-		{
-			// if (n >= _arrCap)
-			// 	throw std::out_of_range("vector");			//	exception ????
-			return _arr[n];
-		}
-
-		const_reference		operator [] (size_t n) const
-		{
-			// if (n >= _arrCap)
-			// 	throw std::out_of_range("vector");			//	exception ????
-			return _arr[n];
-		}
+		reference		operator [] (size_t n) { return _arr[n]; }
+		const_reference	operator [] (size_t n) const { return _arr[n]; }
 };
 
-template< class T, class Alloc >
-bool	operator == (const ft::Vector<T,Alloc>& lhs, const ft::Vector<T,Alloc>& rhs)
+/*	COMPARISON OPERATORS	*/
+
+template<class _T, class _Alloc>
+bool	operator == (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
 {
 	if (lhs.size() == rhs.size())
 		return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 	return false;
 }
 
-template< class T, class Alloc >
-bool	operator != ( const ft::Vector<T,Alloc>& lhs, const ft::Vector<T,Alloc>& rhs ) {return !(lhs == rhs); }
+template<class _T, class _Alloc>
+bool	operator != (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
+{
+	return !(lhs == rhs);
+}
 
-template< class T, class Alloc >
-bool	operator < ( const ft::Vector<T,Alloc>& lhs, const ft::Vector<T,Alloc>& rhs )
+template<class _T, class _Alloc>
+bool	operator < (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
 {
 	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
-template< class T, class Alloc >
-bool	operator > ( const ft::Vector<T,Alloc>& lhs, const ft::Vector<T,Alloc>& rhs )
+template<class _T, class _Alloc>
+bool	operator > (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
 {
-	return lhs.size() == rhs.size() ?
-	ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())
-	: !ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	if (lhs.size() == rhs.size())
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	return !ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
-template< class T, class Alloc >
-bool	operator <= ( const ft::Vector<T,Alloc>& lhs, const ft::Vector<T,Alloc>& rhs )
+template<class _T, class _Alloc>
+bool	operator <= (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
 {
 	if (lhs == rhs)
 		return true;
-	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	return (lhs < rhs);
 }
 
-template< class T, class Alloc >
-bool	operator >= ( const ft::Vector<T,Alloc>& lhs, const ft::Vector<T,Alloc>& rhs )
+template<class _T, class _Alloc>
+bool	operator >= (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
 {
 	if (lhs == rhs)
 		return true;
-	return !(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	return (lhs > rhs);
 }
 
 #endif /* __VECTOR_H__ */

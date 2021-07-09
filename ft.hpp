@@ -5,11 +5,14 @@
 
 namespace ft
 {
-	template <bool B, class T = void>
+
+/*	ENABLE IF	*/
+
+	template <bool _B, class _T = void>
 	struct	enable_if {};
 
-	template <class T>
-	struct	enable_if<true, T> { typedef T type; };
+	template <class _T>
+	struct	enable_if<true, _T> { typedef _T type; };
 
 	template <typename _Category, typename _T>
 	struct	iterator_traits
@@ -21,8 +24,10 @@ namespace ft
 			typedef _Category	iterator_category;
 	};
 
-	template<class InputIt1, class InputIt2>
-	bool	equal(InputIt1 first1, InputIt1 last1, InputIt2 first2)
+/*	EQUAL COMPARE	*/
+
+	template<class _InputIt1, class _InputIt2>
+	bool	equal(_InputIt1 first1, _InputIt1 last1, _InputIt2 first2)
 	{
 		for ( ; first1 != last1; ++first1, ++first2)
 		{
@@ -32,8 +37,10 @@ namespace ft
 		return true;
 	}
 
-	template<class InputIt1, class InputIt2>
-	bool	lexicographical_compare(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2)
+/*	LEXICOGRAPHICAL COMPARE	*/
+
+	template<class _InputIt1, class _InputIt2>
+	bool	lexicographical_compare(_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2)
 	{
 		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 )
 		{
@@ -43,8 +50,8 @@ namespace ft
 		return (first1 == last1) && (first2 != last2);
 	}
 
-	template<class InputIt1, class InputIt2, class Compare>
-	bool	lexicographical_compare(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, Compare comp)
+	template<class _InputIt1, class _InputIt2, class _Compare>
+	bool	lexicographical_compare(_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2, _Compare comp)
 	{
 		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 )
 		{
@@ -54,7 +61,9 @@ namespace ft
 		return (first1 == last1) && (first2 != last2);
 	}
 
-	template <class _T, class _Allocator = std::allocator<_T> >
+/*	CONTAINER PTOTOTYPES	*/
+
+	template < class _T, class _Allocator = std::allocator<_T> >
 	class Vector;
 };
 
