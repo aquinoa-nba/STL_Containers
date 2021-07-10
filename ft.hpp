@@ -5,7 +5,6 @@
 
 namespace ft
 {
-
 /*    ENABLE IF    */
 
     template <bool _B, class _T = void>
@@ -65,6 +64,9 @@ namespace ft
 
     template < class _T, class _Allocator = std::allocator<_T> >
     class Vector;
+
+    template<class _T, class _Container = Vector<_T> >
+    class Stack;
 };
 
 #endif /* __FT_H__ */
