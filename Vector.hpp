@@ -6,6 +6,8 @@
 template <class _T, class _Allocator>
 class ft::Vector
 {
+    private:
+
 /*    TYPES    */
 
     typedef _T    value_type;
@@ -15,6 +17,15 @@ class ft::Vector
     typedef typename allocator_type::reference    reference;
     typedef typename allocator_type::const_reference    const_reference;
     typedef ptrdiff_t    difference_type;
+
+/* VARIABLES    */
+
+    allocator_type    _alloc;
+    pointer    _arr;
+    size_t    _arrSize;
+    size_t    _arrCap;
+
+    public:
 
 /*    ITERATOR    */
 
@@ -47,7 +58,7 @@ class ft::Vector
     iterator&    operator -= (difference_type n) { _ptr -= n; return *this; }
     iterator    operator + (difference_type n) const { return iterator(_ptr + n); }
     iterator    operator - (difference_type n) const { return iterator(_ptr - n); }
-    reference&    operator * () { return *_ptr; };
+    reference    operator * () { return *_ptr; };
     difference_type    operator - (iterator const &other) const { return _ptr - other._ptr; }
     reference    operator [] (const_reference n) const { return _ptr[n]; }
     pointer    operator -> () { return _ptr; }
@@ -96,7 +107,7 @@ class ft::Vector
     const_iterator&    operator -= (difference_type n) { _ptr -= n; return *this; }
     const_iterator    operator + (difference_type n) const { return const_iterator(_ptr + n); }
     const_iterator    operator - (difference_type n) const { return const_iterator(_ptr - n); }
-    const_reference&    operator * () const { return *_ptr; };
+    const_reference    operator * () const { return *_ptr; };
     difference_type    operator - (const_iterator const &other) const { return _ptr - other._ptr; }
     const_reference    operator [] (const_reference n) const { return _ptr[n]; }
     const_pointer    operator -> () const { return _ptr; }
@@ -147,7 +158,7 @@ class ft::Vector
     reverse_iterator&    operator -= (difference_type n) { _ptr += n; return *this; }
     reverse_iterator    operator + (difference_type n) const { return reverse_iterator(_ptr - n); }
     reverse_iterator    operator - (difference_type n) const { return reverse_iterator(_ptr + n); }
-    reference&    operator * () const { return *_ptr; };
+    reference    operator * () const { return *_ptr; };
     difference_type    operator - (reverse_iterator const &other) const { return other._ptr - _ptr; }
     reference    operator [] (const_reference n) const { return _ptr[n]; }
     pointer    operator -> () { return _ptr; }
@@ -196,7 +207,7 @@ class ft::Vector
     const_reverse_iterator&    operator -= (difference_type n) { _ptr += n; return *this; }
     const_reverse_iterator    operator + (difference_type n) const { return const_reverse_iterator(_ptr - n); }
     const_reverse_iterator    operator - (difference_type n) const { return const_reverse_iterator(_ptr + n); }
-    const_reference&    operator * () const { return *_ptr; };
+    const_reference    operator * () const { return *_ptr; };
     difference_type    operator - (const_reverse_iterator const &other) const { return other._ptr - _ptr; }
     const_reference    operator [] (const_reference n) const { return _ptr[n]; }
     const_pointer    operator -> () const { return _ptr; }
@@ -215,14 +226,6 @@ class ft::Vector
     bool    operator >= (reverse_iterator const &other) const { return _ptr >= other.getPtr(); }
     bool    operator <= (reverse_iterator const &other) const { return _ptr <= other.getPtr(); }
     };
-
-    private:
-    allocator_type    _alloc;
-    pointer    _arr;
-    size_t    _arrSize;
-    size_t    _arrCap;
-
-    public:
 
 /*    CONSTRUCTORS    */
 
