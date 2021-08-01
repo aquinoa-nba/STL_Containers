@@ -1,12 +1,10 @@
-#ifndef __FT_H__
-# define __FT_H__
+#pragma once
 
-# include <iostream>
+#include <iostream>
 
 namespace ft
 {
 /*    ENABLE IF    */
-
     template<bool _B, class _T = void>
     struct    enable_if {};
 
@@ -14,32 +12,29 @@ namespace ft
     struct    enable_if<true, _T> { typedef _T type; };
 
 /*    ITERATOR TRAITS    */
-
     template<class _Category, class _T>
     struct    iterator_traits
     {
-            typedef _T            value_type;
-            typedef _T*            pointer;
-            typedef _T&            reference;
-            typedef ptrdiff_t    difference_type;
-            typedef _Category    iterator_category;
+        typedef _T                value_type;
+        typedef value_type*        pointer;
+        typedef value_type&        reference;
+        typedef ptrdiff_t        difference_type;
+        typedef _Category        iterator_category;
     };
 
 /*    REVERSE ITERATOR */
-
     template<class _Iter>
     struct    reverse_iterator
     {
-        typedef _Iter                                iterator_type;
-        typedef typename _Iter::value_type            value_type;
-        typedef typename _Iter::pointer                pointer;
-        typedef typename _Iter::reference            reference;
-        typedef typename _Iter::difference_type        difference_type;
-        typedef typename _Iter::iterator_category    iterator_category;
+        typedef _Iter                                        iterator_type;
+        typedef typename iterator_type::value_type            value_type;
+        typedef typename iterator_type::pointer                pointer;
+        typedef typename iterator_type::reference            reference;
+        typedef typename iterator_type::difference_type        difference_type;
+        typedef typename iterator_type::iterator_category    iterator_category;
     };
 
 /*    EQUAL COMPARE    */
-
     template<class _InputIt1, class _InputIt2>
     bool    equal(_InputIt1 first1, _InputIt1 last1, _InputIt2 first2)
     {
@@ -52,7 +47,6 @@ namespace ft
     }
 
 /*    LEXICOGRAPHICAL COMPARE    */
-
     template<class _InputIt1, class _InputIt2>
     bool    lexicographical_compare(_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2)
     {
@@ -76,7 +70,6 @@ namespace ft
     }
 
 /*    PAIR    */
-
     template<class _T1, class _T2>
     struct pair
     {
@@ -101,7 +94,7 @@ namespace ft
         /*    copy constructor    */
         pair(const pair &other) { *this = other; }
 
-        /*    assignment operator    */
+    /*    ASSIGNMENT OPERATOR    */
         pair&    operator = (const pair &other)
         {
             if (this != &other)
@@ -114,12 +107,10 @@ namespace ft
     };
 
 /*    MAKE PAIR    */
-
     template<class _T1, class _T2>
     pair<_T1, _T2>    make_pair(_T1 t, _T2 u) { return pair<_T1, _T2>(t, u); }
 
 /*    CONTAINER PROTOTYPES    */
-
     template <    class _T,
                 class _Allocator = std::allocator<_T> >
     class Vector;
@@ -134,5 +125,3 @@ namespace ft
                 class _Allocator = std::allocator<pair<const _Key, _T> > >
     class Map;
 };
-
-#endif /* __FT_H__ */
