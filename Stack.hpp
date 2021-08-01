@@ -1,13 +1,12 @@
-#ifndef __STACK_H__
-# define __STACK_H__
+#pragma once
 
-# include "Vector.hpp"
-# include "ft.hpp"
+#include "Vector.hpp"
+#include "ft.hpp"
 
 template<class _T, class _Container>
 class ft::Stack
 {
-    private:
+/*    MEMBER TYPES    */
         typedef _Container                                container_type;
         typedef typename _Container::value_type            value_type;
         typedef typename _Container::reference            reference;
@@ -17,42 +16,27 @@ class ft::Stack
         container_type    _c;
 
 /*    CONSTRUCTORS    */
-
-        explicit Stack(const _Container &cont = _Container()) : _c(cont) {}
-
+        Stack(const _Container &cont = _Container()) : _c(cont) {}
         Stack(const Stack &other) : _c(other._c) {}
-
 /*    DESTRUCTOR    */
-
         ~Stack() {}
-
-/*    COPY ASSIGNMENT OPERATOR    */
-
+/*    ASSIGNATION OPERATOR OVERLOAD    */
         Stack&    operator = (const Stack &other)
         {
             _c = other._c;
             return *this;
         }
-
 /*    MEMBER FUNCTIONS    */
-
         reference         top() { return _c.back(); }
-
         const_reference    top() const {return _c.back(); }
-
-        bool            empty() const { return _c.empty(); }
-
-        size_t            size() const { return _c.size(); }
-
-        void             push(const_reference value) { _c.push_back(value); }
-
         void            pop() { _c.pop_back(); }
-
+        void             push(const_reference value) { _c.push_back(value); }
+        bool            empty() const { return _c.empty(); }
+        size_t            size() const { return _c.size(); }
         void            swap(Stack<_T, _Container> &other) { _c.swap(other._c); }
 };
 
 /*    COMPARISON OPERATORS    */
-
 template<class _T, class _Container>
 bool    operator == (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _Container> &rhs)
 {
@@ -88,5 +72,3 @@ bool    operator >= (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _
 {
     return lhs._c >= rhs._c;
 }
-
-#endif /* __STACK_H__ */
