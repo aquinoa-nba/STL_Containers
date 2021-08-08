@@ -13,7 +13,7 @@ template <    class _Key,
             class _T,
             class _Compare,
             class _Allocator >
-class ft::Map
+class ft::map
 {
     public:
 /*    MEMBER TYPES    */
@@ -23,10 +23,10 @@ class ft::Map
         typedef _Allocator                    allocator_type;
         typedef ft::pair<const _Key, _T>    value_type;
         typedef value_type*                    pointer;
-        typedef const value_type*            const_pointer;
         typedef value_type&                    reference;
+        typedef const value_type*            const_pointer;
         typedef const value_type&            const_reference;
-        typedef std::ptrdiff_t                difference_type;
+        typedef ptrdiff_t                    difference_type;
 
     private:
         struct    node    /*    узел дерева    */
@@ -36,12 +36,11 @@ class ft::Map
             node        *left;        /*    указатель на левое поддерево        */
             node        *right;        /*    указатель на правое поддерево        */
             node        *parent;    /*    указатель на родителя                */
-            bool        isBegin;    /*     пустой узел перед минимальным        */
-            bool        isEnd;        /*     пустой узел после максимального    */
+            bool        isBegin;    /*    true - узел перед минимальным        */
+            bool        isEnd;        /*    true - узел после максимального        */
         /*    конструкторы нового узла    */
             node()
-                : value(ft::make_pair(key_type(), mapped_type())),
-                height(0),
+                : height(0),
                 left(nullptr), right(nullptr), parent(nullptr),
                 isBegin(1), isEnd(1) {}
             node(const_reference val)
@@ -50,6 +49,16 @@ class ft::Map
                 left(nullptr), right(nullptr), parent(nullptr),
                 isBegin(0), isEnd(0) {}
         };
+
+        class value_compare
+        {
+            public:
+                key_compare    _comp;
+                value_compare(const key_compare &c) : _comp(c) {}
+                bool    operator ()(const_reference val1, const_reference val2) const
+                    { return _comp(val1.first, val2.first); }
+        };
+
 /*    VARIABLES    */
         node            *_tree;
         size_t            _treeSize;
@@ -58,9 +67,14 @@ class ft::Map
         node            *_endNode;
         key_compare        _cmp;
 /*    SECONDARY FUNCTIONS    */
-        int        cmp(const key_type &first, const key_type &second) const /*    сравнение ключей    */
+        int        keyCmp(const key_type &key1, const key_type &key2) const /*    сравнение ключей    */
         {
-            return _cmp(first, second) + _cmp(second, first) * 2;
+            return _cmp(key1, key2) + _cmp(key2, key1) * 2; /*    0(key1 == key2), 1(key1 < key2), 2(key1 > key2)    */
+        }
+
+        int        valueCmp(const_reference val1, const_reference val2) const /*    сравнение двух пар по ключу    */
+        {
+            return keyCmp(val1.first, val2.first);
         }
 
         size_t    height(node *p)    /*    получение высоты поддерева    */
@@ -158,43 +172,9 @@ class ft::Map
             return p->right ? find_max(p->right) : p;
         }
 
-        node*    remove_min(node *p)    /*    удаление узла с минимальным ключом из дерева p    */
+        node*    find_node(node* p, key_type k) const    /*    поиск узла по ключу    */
         {
-            if (p->left == 0)    /*    найден минимальный элемент    */
-                return p->right;    /*    замена минимального элемента на его правое поддерево    */
-            p->left = remove_min(p->left);    /*    рекурсивный поиск минимального элемента    */
-            makeBalance(p);    /*    балансировка ветви от 'p' до корня    */
-            return p;
-        }
-
-        node*    remove(node *p, int k)    /*    удаление узла с ключом 'k' из дерева с корнем 'p'    */
-        {
-            int        compare = cmp(k, p->value->first);
-            if (!p)    /*    если узла с данным ключом 'k' не существует удалять нечего    */
-                return 0;
-        /*    рекурсивно ищем узел с искомым ключом 'k'    */
-            if (compare == LESS)
-                p->left = remove(p->left, k);
-            else if (compare == GREATER)
-                p->right = remove(p->right, k);
-            else    /*    k == p->key - найден узел 'p' с искомым ключом 'k'    */
-            {
-                node *q = p->left;    /*    запоминаем корень левого поддерева узла 'p'    */
-                node *r = p->right;    /*    запоминаем корень правого поддерева узла 'p'    */
-                delete p;    /*    удаляем узел 'p'    */
-                if (!r)    /*    если правое поддерево пустое, то возвращаем указатель на левое поддерево    */
-                    return q;    /*    слеав от 'p' может быть один дочерний узел (height == 1), либо узел 'p' - лист, т.е. замена не требуется    */
-                node *min = find_min(r);    /*    если правое поддерево не пустое, то находим там элемент 'min' и ставим его на место 'p'    */
-                min->right = remove_min(r);    /*    справа к 'min' подвешиваем 'r'    */
-                min->left = q;    /*    слева к 'min' подвешиваем 'q'    */
-                return balance(min);    /*    возвращаем сбалансированный 'min'    */
-            }
-            return balance(p);    /*    рекурсивная балансировка всех пройденных узлов    */
-        }
-
-        node*    find_node(node* p, int k) const    /*    поиск узла по ключу    */
-        {
-            int        compare = cmp(k, p->value.first);
+            int        compare = keyCmp(k, p->value.first);
             if (compare == LESS)
             {
                 if (p->left && p->left != _beginNode)
@@ -211,26 +191,16 @@ class ft::Map
         void    delete_tree(node *p)    /*    очистка дерева    */
         {
             if (p->left != nullptr)
-            {
-                // std::cout << p->left->value.second << " <- " << p->value.second << std::endl;
                 delete_tree(p->left);
-            }
             if (p->right != nullptr)
-            {
-                // std::cout << p->value.second << " -> " << p->right->value.second << std::endl;
                 delete_tree(p->right);
-            }
-            // std::cout << p->value.second << std::endl;
             delete p;
         }
 
         void    makeBalance(node *node)    /*    балансировка от node до корня    */
         {
-            while (node)
-            {
+            for ( ; node != nullptr; node = node->parent)
                 node = balance(node);
-                node = node->parent;
-            }
         }
 
     public:
@@ -267,9 +237,10 @@ class ft::Map
                 bool    operator == (const const_iterator &other) { return this->_node == other.getNode(); }
                 bool    operator != (const const_iterator &other) { return this->_node != other.getNode(); }
 
-                value_type&        operator * () { return _node->value; }
+                reference    operator * () { return _node->value; }
+                pointer        operator -> () { return &_node->value; }
 
-                iterator&        operator ++ ()
+                iterator&    operator ++ ()
                 {
                     if (_node->isBegin)
                         _node = _node->parent;
@@ -350,7 +321,8 @@ class ft::Map
                 bool    operator == (const iterator &other) { return this->_node == other.getNode(); }
                 bool    operator != (const iterator &other) { return this->_node != other.getNode(); }
 
-                const value_type&        operator * () { return _node->value; }
+                const_reference    operator * () const { return _node->value; }
+                const_pointer    operator -> () const { return &_node->value; }
 
                 const_iterator&        operator ++ ()
                 {
@@ -386,14 +358,14 @@ class ft::Map
 
                 const_iterator        operator ++ (int)
                 {
-                    iterator    tmp(_node);
+                    const_iterator    tmp(_node);
                     operator++();
                     return tmp;
                 }
 
                 const_iterator        operator -- (int)
                 {
-                    iterator    tmp(_node);
+                    const_iterator    tmp(_node);
                     operator--();
                     return tmp;
                 }
@@ -413,7 +385,7 @@ class ft::Map
                 ~reverse_iterator() {}
                 reverse_iterator(const reverse_iterator &other) { *this = other; }
 
-                node*            getNode() const { return _node; }
+                node*    getNode() const { return _node; }
 
                 reverse_iterator&        operator = (const reverse_iterator &other)
                 {
@@ -426,7 +398,8 @@ class ft::Map
                 bool    operator == (const const_reverse_iterator &other) { return this->_node == other.getNode(); }
                 bool    operator != (const const_reverse_iterator &other) { return this->_node != other.getNode(); }
 
-                value_type&        operator * () { return _node->value; }
+                reference    operator * () { return _node->value; }
+                pointer        operator -> () { return &_node->value; }
 
                 reverse_iterator&        operator ++ ()
                 {
@@ -462,15 +435,15 @@ class ft::Map
 
                 reverse_iterator        operator ++ (int)
                 {
-                    iterator    tmp(_node);
-                    operator--();
+                    reverse_iterator    tmp(_node);
+                    operator++();
                     return tmp;;
                 }
 
                 reverse_iterator        operator -- (int)
                 {
-                    iterator    tmp(_node);
-                    operator++();
+                    reverse_iterator    tmp(_node);
+                    operator--();
                     return tmp;
                 }
         };
@@ -509,7 +482,8 @@ class ft::Map
                 bool    operator == (const reverse_iterator &other) { return this->_node == other.getNode(); }
                 bool    operator != (const reverse_iterator &other) { return this->_node != other.getNode(); }
 
-                const value_type&        operator * () { return _node->value; }
+                const_reference    operator * () { return _node->value; }
+                const_pointer    operator -> () { return &_node->value; }
 
                 const_reverse_iterator&        operator ++ ()
                 {
@@ -545,33 +519,37 @@ class ft::Map
 
                 const_reverse_iterator        operator ++ (int)
                 {
-                    iterator    tmp(_node);
-                    operator--();
+                    const_reverse_iterator    tmp(_node);
+                    operator++();
                     return tmp;
                 }
 
                 const_reverse_iterator        operator -- (int)
                 {
-                    iterator    tmp(_node);
-                    operator++();
+                    const_reverse_iterator    tmp(_node);
+                    operator--();
                     return tmp;
                 }
         };
 /*    CONSTRUCTORS    */
-        Map() : _tree(new node()), _treeSize(0) { _beginNode = _endNode = _tree; }
+        map() : _tree(new node()), _treeSize(0) { _beginNode = _endNode = _tree; }
 
         template<class _InputIt>
-        Map(_InputIt first, _InputIt last) : _tree(new node()), _treeSize(0)
+        map(_InputIt first, _InputIt last) : _tree(new node()), _treeSize(0)
         {
             _beginNode = _endNode = _tree;
             insert(first, last);
         }
 
-        Map(const Map &other) { *this = other; }
+        map(const map &other)  : _tree(new node()), _treeSize(0)
+        {
+            _beginNode = _endNode = _tree;
+            *this = other;
+        }
 /*    DESTRUCTOR    */
-        ~Map() { clear(); }
+        ~map() { delete_tree(_tree); }
 /*    ASSIGNATION OPERATOR OVERLOAD    */
-        Map&    operator = (const Map &other)
+        map&    operator = (const map &other)
         {
             if (this != &other)
             {
@@ -600,12 +578,15 @@ class ft::Map
         size_t                    size() const { return _treeSize; }
         size_t                    max_size() const { return _alloc.max_size() / 2; }
         bool                    empty() const { return _treeSize ? false : true; }
+        allocator_type            get_allocator() const { return _alloc; }
+        key_compare                key_comp() const { return _cmp; }
+        value_compare            value_comp() const { return value_compare(_cmp); }
         const mapped_type&        at(const key_type& key) const { return at(key); }
 
         mapped_type&        at(const key_type& key)
         {
             node *res = find_node(_tree, key);
-            if (cmp(key, res->value.first) == EQUAL)
+            if (keyCmp(key, res->value.first) == EQUAL)
                 return res->value.second;
             else
                 throw std::out_of_range("map::at:  key not found");
@@ -620,31 +601,36 @@ class ft::Map
         size_t    count(const key_type& key) const
         {
             node    *res = find_node(_tree, key);
-            return cmp(key, res->value.first) == EQUAL ? 1 : 0;
+            return keyCmp(key, res->value.first) == EQUAL ? 1 : 0;
         }
 
         void    clear()
         {
-            delete_tree(_tree);
-            _treeSize = 0;
+            if (_treeSize)
+            {
+                delete_tree(_tree);
+                _tree = new node();
+                _beginNode = _endNode = _tree;
+                _treeSize = 0;
+            }
         }
 
         iterator        find(const key_type& key)
         {
             node    *res = find_node(_tree, key);
-            return cmp(res->value.first, key) == EQUAL ? iterator(res) : end();
+            return keyCmp(res->value.first, key) == EQUAL ? iterator(res) : end();
         }
 
         const_iterator    find(const key_type& key) const
         {
             node    *res = find_node(_tree, key);
-            return cmp(res->value.first, key) == EQUAL ? const_iterator(res) : cend();
+            return keyCmp(res->value.first, key) == EQUAL ? const_iterator(res) : cend();
         }
 
         iterator        lower_bound(const key_type& key)
         {
             iterator it(find_node(_tree, key));
-            if (cmp((*it).first, key) == LESS)
+            if (keyCmp((*it).first, key) == LESS)
                 ++it;
             return it;
         }
@@ -652,7 +638,7 @@ class ft::Map
         const_iterator    lower_bound(const key_type& key) const
         {
             const_iterator it(find_node(_tree, key));
-            if (cmp((*it).first, key) == LESS)
+            if (keyCmp((*it).first, key) == LESS)
                 ++it;
             return it;
         }
@@ -660,7 +646,7 @@ class ft::Map
         iterator    upper_bound(const key_type& key)
         {
             iterator    it(find_node(_tree, key));
-            int            compare = cmp((*it).first, key);
+            int            compare = keyCmp((*it).first, key);
             if (compare == LESS || compare == EQUAL)
                 ++it;
             return it;
@@ -669,7 +655,7 @@ class ft::Map
         const_iterator    upper_bound(const key_type& key) const
         {
             const_iterator    it(find_node(_tree, key));
-            int                compare = cmp((*it).first, key);
+            int                compare = keyCmp((*it).first, key);
             if (compare == LESS || compare == EQUAL)
                 ++it;
             return it;
@@ -685,10 +671,10 @@ class ft::Map
             return ft::make_pair(const_iterator(lower_bound(key)), const_iterator(upper_bound(key)));
         }
 
-        ft::pair<iterator, bool>    insert(const value_type &value)
+        ft::pair<iterator, bool>    insert(const_reference value)
         {
             node    *newNode = find_node(_tree, value.first);    /*    ищем место для добавления элемента    */
-            if (_treeSize && cmp(value.first, newNode->value.first) == EQUAL)    /*    если элемент уже существует    */
+            if (_treeSize && valueCmp(value, newNode->value) == EQUAL)    /*    если элемент уже существует    */
                 return ft::make_pair(iterator(newNode), false);
             if (!_treeSize)    /*    вставка самого первого элемента    */
             {
@@ -701,9 +687,9 @@ class ft::Map
                 _beginNode = newNode->left;    /*    указатель на начало депева (элемент перед первым)    */
                 _tree = newNode;    /*     новый корень всего дерева    */
             }
-            else
-            {    /*    newNode - родитель нового элемента!    */
-                if (cmp(value.first, newNode->value.first) == LESS)    /*    вставка слева    */
+            else    /*    newNode - родитель нового элемента!    */
+            {
+                if (valueCmp(value, newNode->value) == LESS)    /*    вставка слева    */
                 {
                     if (newNode->left)    /*    если newNode - миинимальный элемент дерева    */
                     {
@@ -720,7 +706,7 @@ class ft::Map
                     }
                     newNode = newNode->left;    /*    newNode - добавленный узел    */
                 }
-                else if (cmp(value.first, newNode->value.first) == GREATER)    /*    вставка справа    */
+                else if (valueCmp(value, newNode->value) == GREATER)    /*    вставка справа    */
                 {
                     if (newNode->right)    /*    если newNode - максимальный элемент дерева    */
                     {
@@ -745,11 +731,11 @@ class ft::Map
 
         void    erase(iterator pos)
         {
-            node    *rm = pos.getNode();
-            node    *l = rm->left;    /*    запоминаем корень левого поддерева узла 'p'     */
-            node    *r = rm->right;    /*    запоминаем корень правого поддерева узла 'p'    */
-            node    *parent = rm->parent;
-            if (rm == _beginNode->parent)
+            node    *rm = pos.getNode(); /*    указатель на узел для длаления    */
+            node    *l = rm->left;    /*    указатель на левое поддерево узла 'rm'     */
+            node    *r = rm->right;    /*    указатель на правое поддерево узла 'rm'    */
+            node    *parent = rm->parent; /*    указатель на родителя 'rm'    */
+            if (rm == _beginNode->parent)    /*    удаляем минимальный элемент    */
             {
                 if (_treeSize == 1)
                 {
@@ -757,7 +743,7 @@ class ft::Map
                     _beginNode = _endNode = _tree = new node();
                     return ;
                 }
-                if (r)
+                if (r) /*    если у 'rm' есть правое поддерево, то заменяем 'rm' на минимальный элемент из дерева 'r'    */
                 {
                     node    *newBegin = find_min(r);
                     if (parent)
@@ -768,7 +754,7 @@ class ft::Map
                     newBegin->left = _beginNode;
                     _beginNode->parent = newBegin;
                 }
-                else
+                else    /*    обычное удаление минимального элемента    */
                 {
                     parent->left = _beginNode;
                     _beginNode->parent = parent;
@@ -779,9 +765,9 @@ class ft::Map
                 _treeSize--;
                 return ;
             }
-            if (rm == _endNode->parent)
+            if (rm == _endNode->parent)    /*    удаляем максимальный элемент    */
             {
-                if (l)
+                if (l) /*    если у 'rm' есть левое поддерево, то заменяем 'rm' на максимальный элемент из дерева 'l'    */
                 {
                     node    *newEnd = find_max(l);
                     if (parent)
@@ -792,7 +778,7 @@ class ft::Map
                     newEnd->right = _endNode;
                     _endNode->parent = newEnd;
                 }
-                else
+                else    /*    обычное удаление максимального элемента    */
                 {
                     _endNode->parent = parent;
                     parent->right = _endNode;
@@ -803,16 +789,16 @@ class ft::Map
                 _treeSize--;
                 return ;
             }
-            if (l)
+            if (l)    /*    удаление элемента с левым поддеревом    */
             {
-                node    *replacement = find_max(l);
+                node    *replacement = find_max(l);    /* максимальный    элемент из левого поддерева для замены 'rm'    */
                 if (replacement->parent == rm)
                 {
                     replacement->parent = parent;
                     replacement->right = r;
                     if (r)
                         r->parent = replacement;
-/*    !!!    */            if (parent)
+                    if (parent)
                     {
                         if (parent->left == rm)
                             parent->left = replacement;
@@ -835,7 +821,7 @@ class ft::Map
                 if (r)
                     r->parent = replacement;
                 replacement->parent = parent;
-/*    !!!    */        if (parent)
+                if (parent)
                 {
                     if (parent->left == rm)
                         parent->left = replacement;
@@ -846,7 +832,7 @@ class ft::Map
                     _tree = replacement;
                 makeBalance(replacement);
             }
-/*    !!!    */    else
+            else
             {
                 if (parent->left == rm)
                 {
@@ -869,12 +855,45 @@ class ft::Map
         void insert(_InputIt first, _InputIt last)
         {
             for ( ; first != last; ++first)
-                insert(ft::make_pair((*first).first, (*first).second));
+                insert(ft::make_pair(first->first, first->second));
         }
 
         void    erase(iterator first, iterator last)
         {
             while (first != last)
                 erase(first++);
+        }
+
+        size_t    erase(const key_type& key)
+        {
+            node *node = find_node(_tree, key);
+
+            if (keyCmp(node->value.first, key) == EQUAL)
+            {
+                erase(iterator(node));
+                return 1;
+            }
+            return 0;
+        }
+
+        void    swap(map& other)
+        {
+            if (this != &other)
+            {
+                node    *treeTmp = this->_tree;
+                node    *beginTmp = this->_beginNode;
+                node    *endTmp = this->_endNode;
+                size_t    sizeTmp = this->_treeSize;
+
+                this->_tree = other._tree;
+                this->_beginNode = other._beginNode;
+                this->_endNode = other._endNode;
+                this->_treeSize = other._treeSize;
+
+                other._tree = treeTmp;
+                other._beginNode = beginTmp;
+                other._endNode = endTmp;
+                other._treeSize = sizeTmp;
+            }
         }
 };

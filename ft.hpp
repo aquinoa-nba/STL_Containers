@@ -110,18 +110,22 @@ namespace ft
     template<class _T1, class _T2>
     pair<_T1, _T2>    make_pair(_T1 t, _T2 u) { return pair<_T1, _T2>(t, u); }
 
+/*    IS INTEGRAL    */
+    template <class T>
+    struct is_integral : public std::integral_constant<bool, __is_integral(T)> {};
+
 /*    CONTAINER PROTOTYPES    */
     template <    class _T,
                 class _Allocator = std::allocator<_T> >
-    class Vector;
+    class vector;
 
     template <    class _T,
-                class _Container = Vector<_T> >
-    class Stack;
+                class _Container = vector<_T> >
+    class stack;
 
     template <    class _Key,
                 class _T,
                 class _Compare = std::less<_Key>,
                 class _Allocator = std::allocator<pair<const _Key, _T> > >
-    class Map;
+    class map;
 };

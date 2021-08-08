@@ -3,7 +3,7 @@
 #include "ft.hpp"
 
 template <class _T, class _Allocator>
-class ft::Vector
+class ft::vector
 {
     public:
 /*    MEMBER TYPES    */
@@ -237,16 +237,16 @@ class ft::Vector
 
         friend    const_reverse_iterator    operator + (const difference_type &n, const const_reverse_iterator &it) { return it + n; }
 /*    CONSTRUCTORS    */
-        Vector() : _arr(nullptr), _arrSize(0), _arrCap(0) {}
+        vector() : _arr(nullptr), _arrSize(0), _arrCap(0) {}
 
-        Vector(const size_t &n, const_reference value)
+        vector(const size_t &n, const_reference value)
             : _arr(_alloc.allocate(n)), _arrSize(n), _arrCap(n)
         {
             for (size_t i = 0; i < _arrSize; ++i)
                 _alloc.construct(_arr + i, value);
         }
 
-        Vector(const size_t &count)
+        vector(const size_t &count)
         {
             if (count < 0)
                 throw std::out_of_range("vector");
@@ -256,7 +256,7 @@ class ft::Vector
         }
 
         template<class _InputIt>
-        Vector( _InputIt first, _InputIt last,
+        vector( _InputIt first, _InputIt last,
                 typename ft::enable_if<std::__is_input_iterator<_InputIt>::value>::type * = nullptr )
         {
             size_t    range = last - first;
@@ -268,7 +268,7 @@ class ft::Vector
             insert(begin(), first, last);
         }
 
-        Vector(const Vector &other)
+        vector(const vector &other)
             : _alloc(other._alloc), _arrSize(other._arrSize), _arrCap(other._arrCap)
         {
             _arr = _alloc.allocate(_arrCap);
@@ -276,7 +276,7 @@ class ft::Vector
                 _alloc.construct(_arr + i, other._arr[i]);
         }
 /*    DESTRUCTOR    */
-        ~Vector()
+        ~vector()
         {
             if (_arr)
             {
@@ -285,7 +285,7 @@ class ft::Vector
             }
         }
 /*    ASSIGNATION OPERATOR OVERLOAD    */
-        Vector&    operator = (const Vector &other)
+        vector&    operator = (const vector &other)
         {
             if (this != &other)
             {
@@ -508,7 +508,7 @@ class ft::Vector
                 push_back(*first);
         }
 
-        void            swap(Vector &other)
+        void            swap(vector &other)
         {
             if (this != &other)
             {
@@ -532,7 +532,7 @@ class ft::Vector
 
 /*    COMPARISON OPERATORS    */
 template<class _T, class _Alloc>
-bool    operator == (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
+bool    operator == (const ft::vector<_T, _Alloc> &lhs, const ft::vector<_T, _Alloc> &rhs)
 {
     if (lhs.size() == rhs.size())
         return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
@@ -540,27 +540,25 @@ bool    operator == (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Al
 }
 
 template<class _T, class _Alloc>
-bool    operator != (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
+bool    operator != (const ft::vector<_T, _Alloc> &lhs, const ft::vector<_T, _Alloc> &rhs)
 {
     return !(lhs == rhs);
 }
 
 template<class _T, class _Alloc>
-bool    operator < (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
+bool    operator < (const ft::vector<_T, _Alloc> &lhs, const ft::vector<_T, _Alloc> &rhs)
 {
     return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template<class _T, class _Alloc>
-bool    operator > (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
+bool    operator > (const ft::vector<_T, _Alloc> &lhs, const ft::vector<_T, _Alloc> &rhs)
 {
-    if (lhs.size() == rhs.size())
-        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
-    return !ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    return ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
 }
 
 template<class _T, class _Alloc>
-bool    operator <= (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
+bool    operator <= (const ft::vector<_T, _Alloc> &lhs, const ft::vector<_T, _Alloc> &rhs)
 {
     if (lhs == rhs)
         return true;
@@ -568,7 +566,7 @@ bool    operator <= (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Al
 }
 
 template<class _T, class _Alloc>
-bool    operator >= (const ft::Vector<_T, _Alloc> &lhs, const ft::Vector<_T, _Alloc> &rhs)
+bool    operator >= (const ft::vector<_T, _Alloc> &lhs, const ft::vector<_T, _Alloc> &rhs)
 {
     if (lhs == rhs)
         return true;

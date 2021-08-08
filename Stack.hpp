@@ -4,71 +4,71 @@
 #include "ft.hpp"
 
 template<class _T, class _Container>
-class ft::Stack
+class ft::stack
 {
+public:
 /*    MEMBER TYPES    */
         typedef _Container                                container_type;
         typedef typename _Container::value_type            value_type;
         typedef typename _Container::reference            reference;
         typedef typename _Container::const_reference    const_reference;
 
-    public:
-        container_type    _c;
+        container_type    c;
 
 /*    CONSTRUCTORS    */
-        Stack(const _Container &cont = _Container()) : _c(cont) {}
-        Stack(const Stack &other) : _c(other._c) {}
+        stack(const _Container &cont = _Container()) : c(cont) {}
+        stack(const stack &other) : c(other.c) {}
 /*    DESTRUCTOR    */
-        ~Stack() {}
+        ~stack() {}
 /*    ASSIGNATION OPERATOR OVERLOAD    */
-        Stack&    operator = (const Stack &other)
+        stack&    operator = (const stack &other)
         {
-            _c = other._c;
+            c = other.c;
             return *this;
         }
 /*    MEMBER FUNCTIONS    */
-        reference         top() { return _c.back(); }
-        const_reference    top() const {return _c.back(); }
-        void            pop() { _c.pop_back(); }
-        void             push(const_reference value) { _c.push_back(value); }
-        bool            empty() const { return _c.empty(); }
-        size_t            size() const { return _c.size(); }
-        void            swap(Stack<_T, _Container> &other) { _c.swap(other._c); }
+        reference         top() { return c.back(); }
+        const_reference    top() const {return c.back(); }
+        void            pop() { c.pop_back(); }
+        void             push(const_reference value) { c.push_back(value); }
+        bool            empty() const { return c.empty(); }
+        size_t            size() const { return c.size(); }
+        void            swap(stack<_T, _Container> &other) { c.swap(other.c); }
 };
 
 /*    COMPARISON OPERATORS    */
 template<class _T, class _Container>
-bool    operator == (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _Container> &rhs)
+bool    operator == (const ft::stack<_T, _Container> &lhs, const ft::stack<_T, _Container> &rhs)
 {
-    return lhs._c == rhs._c;
+    return lhs.c == rhs.c;
 }
 
 template<class _T, class _Container>
-bool    operator != (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _Container> &rhs)
+bool    operator != (const ft::stack<_T, _Container> &lhs, const ft::stack<_T, _Container> &rhs)
 {
-    return lhs._c != rhs._c;
+    return lhs.c != rhs.c;
 }
 
 template<class _T, class _Container>
-bool    operator < (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _Container> &rhs)
+bool    operator < (const ft::stack<_T, _Container> &lhs, const ft::stack<_T, _Container> &rhs)
 {
-    return lhs._c < rhs._c;
+    return lhs.c < rhs.c;
 }
 
 template<class _T, class _Container>
-bool    operator > (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _Container> &rhs)
+bool    operator > (const ft::stack<_T, _Container> &lhs, const ft::stack<_T, _Container> &rhs)
 {
-    return lhs._c > rhs._c;
+    return lhs.c > rhs.c;
 }
 
 template<class _T, class _Container>
-bool    operator <= (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _Container> &rhs)
+bool    operator <= (const ft::stack<_T, _Container> &lhs, const ft::stack<_T, _Container> &rhs)
 {
-    return lhs._c <= rhs._c;
+    return lhs.c <= rhs.c;
 }
 
 template<class _T, class _Container>
-bool    operator >= (const ft::Stack<_T, _Container> &lhs, const ft::Stack<_T, _Container> &rhs)
+bool    operator >= (const ft::stack<_T, _Container> &lhs, const ft::stack<_T, _Container> &rhs)
 {
-    return lhs._c >= rhs._c;
+    return lhs.c >= rhs.c;
 }
