@@ -1,17 +1,17 @@
 #include <list>
 #include <vector>
 
-#if	0						/*	std::stack	*/
-	#include <iostream>
-	#include <stack>
-	namespace ft = std;
-#else						/*	ft::stack	*/
-	#include "Stack.hpp"
+#if    0                        /*    std::stack    */
+    #include <iostream>
+    #include <stack>
+    namespace ft = std;
+#else                        /*    ft::stack    */
+    #include "Stack.hpp"
 #endif
 
-int		main()
+int        main()
 {
-	std::cout <<"\n##############################################################" << std::endl;
+    std::cout <<"\n##############################################################" << std::endl;
     std::cout << "###                     ";
     std::cout  << "STACK                              ###" << std::endl;
     std::cout << "##############################################################\n" << std::endl;
@@ -34,7 +34,7 @@ int		main()
     std::cout << "intListStack == intListStack2 ?\t" << (intListStack == intListStack2 ? "true" : "false")  << std::endl;
     std::cout << "\n--------------------------------------------------------------\n" << std::endl;
     for (int i = 0; i < 10; ++i)
-	{
+    {
         intStack.push(i);
         intListStack.push(i);
         strStack.push("Str-" + std::to_string(i));
@@ -43,7 +43,7 @@ int		main()
     std::cout << "strStack.empty():\t" << (strStack.empty() ? "true" : "false")  << std::endl;
     std::cout << "intListStack.empty():\t" << (intListStack.empty() ? "true" : "false")  << std::endl;
     std::cout << "\n<+==========================================================+>\n" << std::endl;
-	std::cout << "\tcopy constructor stack( const stack &other )\n" << std::endl;
+    std::cout << "\tcopy constructor stack( const stack &other )\n" << std::endl;
     ft::stack<int> intStack3(intStack);
     ft::stack<std::string> strStack3(strStack);
     ft::stack<int, std::list<int> > intListStack3(intListStack);
@@ -88,7 +88,7 @@ int		main()
     std::cout << "\t\t\t.pop()" << std::endl << std::endl;
     intStack.pop();
     strStack.pop();
-	intListStack.pop();
+    intListStack.pop();
     std::cout << "intStack.top():\t\t" << intStack.top() << std::endl;
     std::cout << "strStack.top():\t\t" << strStack.top() << std::endl;
     std::cout << "intListStack.top():\t" << intListStack.top() << std::endl;
@@ -105,11 +105,11 @@ int		main()
     std::cout << "intListStack.top():\t" << intListStack.top() << std::endl << std::endl;
     std::cout << "\n--------------------------------------------------------------\n" << std::endl;
     std::cout << "intStack.swap(intStack2)" << std::endl;
-	intStack.swap(intStack2);
+    intStack.swap(intStack2);
     std::cout << "strStack.swap(strStack2)" << std::endl;
-	strStack.swap(strStack2);
+    strStack.swap(strStack2);
     std::cout << "intListStack.swap(intListStack2)\n" << std::endl;
-	intListStack.swap(intListStack2);
+    intListStack.swap(intListStack2);
     std::cout << "\n--------------------------------------------------------------\n" << std::endl;
     std::cout << "intStack.size():\t" << intStack.size() << std::endl;
     std::cout << "strStack.size():\t" << strStack.size() << std::endl;
@@ -122,23 +122,23 @@ int		main()
     std::cout << "intListStack2.top():\t" << intListStack2.top() << std::endl << std::endl;
     std::cout << "\n<+==========================================================+>\n" << std::endl;
     std::cout << "intStack\t=\tintStack2" << std::endl;
-	intStack = intStack2;
+    intStack = intStack2;
     std::cout << "strStack\t=\tstrStack" << std::endl;
-	strStack = strStack2;
+    strStack = strStack2;
     std::cout << "intListStack\t=\tintListStack2\n" << std::endl;
-	intListStack = intListStack2;
+    intListStack = intListStack2;
     std::cout << "intStack == intStack2\t?\t" << (intStack == intStack2 ? "true" : "false")  << std::endl;
     std::cout << "strStack == strStack2\t?\t" << (strStack == strStack2 ? "true" : "false")  << std::endl;
     std::cout << "intListStack == intListStack2 ?\t" << (intListStack == intListStack2 ? "true\n" : "false\n")  << std::endl;
 
-	std::vector<int>	vec;
-	for (size_t i = 0; i < 5; ++i)
-		vec.push_back(i);
-	ft::stack<int, std::vector<int> > stck(vec);
-	while (stck.size())
-	{
-		std::cout << stck.top() << std::endl;
-		stck.pop();
-	}
-	return 0;
+    std::vector<int>    vec;
+    for (size_t i = 0; i < 5; ++i)
+        vec.push_back(i);
+    ft::stack<int, std::vector<int> > stck(vec);
+    while (stck.size())
+    {
+        std::cout << stck.top() << std::endl;
+        stck.pop();
+    }
+    return 0;
 }
