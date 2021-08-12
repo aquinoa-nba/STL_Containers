@@ -1,4 +1,4 @@
-#if    0                        /*    ft::vector    */
+#if    1                        /*    std::vector    */
     #include <iostream>
     #include <vector>
     namespace ft = std;
